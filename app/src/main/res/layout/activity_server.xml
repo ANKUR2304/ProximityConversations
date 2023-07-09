@@ -6,22 +6,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    tools:context=".MainActivity">
+    tools:context=".ServerActivity">
 
-    <Button
-        android:id="@+id/make_server_btn"
+    <TextView
+        android:id="@+id/server_message_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Server"
         />
 
-    <Button
-        android:id="@+id/make_client_btn"
+    <TextView
+        android:id="@+id/server_ip_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Client"
+        android:textAlignment="center"
         />
-
-
 
 </LinearLayout>
