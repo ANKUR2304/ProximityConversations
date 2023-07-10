@@ -2,11 +2,13 @@ package com.example.proximity_conversations;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,10 +21,11 @@ import java.util.Enumeration;
 public class ServerActivity extends AppCompatActivity implements Server.ServerCallback {
     TextView messageTV;
     EditText messageET;
-    Button sendMessageBtn;
+    ImageView sendMessageIcon;
     TextView ipTV;
     Server server;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,15 +34,16 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
         messageTV = findViewById(R.id.server_message_tv);
         messageET = findViewById(R.id.server_message_et);
         ipTV = findViewById(R.id.server_ip_tv);
-        sendMessageBtn = findViewById(R.id.send_message_btn);
+        sendMessageIcon = findViewById(R.id.send_message_icon);
 
-        messageET.setVisibility(View.INVISIBLE);
-        sendMessageBtn.setVisibility(View.INVISIBLE);
+        messageET.setVisibility(View.GONE);
+        sendMessageIcon.setVisibility(View.GONE);
 
-        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+        sendMessageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 server.sendMessage(messageET.getText().toString());
+                messageET.getText().clear();
             }
         });
 
@@ -91,8 +95,9 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                ipTV.setVisibility(View.GONE);
                 messageET.setVisibility(View.VISIBLE);
-                sendMessageBtn.setVisibility(View.VISIBLE);
+                sendMessageIcon.setVisibility(View.VISIBLE);
             }
         });
         Log.e("onClientAccepted: ", "done");

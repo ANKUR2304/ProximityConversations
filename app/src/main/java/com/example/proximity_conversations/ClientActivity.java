@@ -2,10 +2,12 @@ package com.example.proximity_conversations;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,9 +17,10 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
     EditText messageET;
     EditText serverIPEditText;
     Button setServerIPBtn;
-    Button sendMessageBtn;
+    ImageView sendMessageIcon;
     Client client;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,29 +28,29 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
 
         messageTV = findViewById(R.id.client_message_tv);
         messageET = findViewById(R.id.client_message_et);
-        messageET.setVisibility(View.INVISIBLE);
+        messageET.setVisibility(View.GONE);
 
         serverIPEditText = findViewById(R.id.client_ip_et);
 
         setServerIPBtn = findViewById(R.id.set_server_ip_btn);
 
-        sendMessageBtn = findViewById(R.id.send_message_btn);
-        sendMessageBtn.setVisibility(View.INVISIBLE);
+        sendMessageIcon = findViewById(R.id.send_message_icon);
+        sendMessageIcon.setVisibility(View.GONE);
 
         setServerIPBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 serverIP = serverIPEditText.getText().toString();
 
-                serverIPEditText.setVisibility(View.INVISIBLE);
+                serverIPEditText.setVisibility(View.GONE);
                 messageET.setVisibility(View.VISIBLE);
-                setServerIPBtn.setVisibility(View.INVISIBLE);
+                setServerIPBtn.setVisibility(View.GONE);
 
                 setupClient();
             }
         });
 
-        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+        sendMessageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 client.sendMessage(messageET.getText().toString());
@@ -59,6 +62,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
                  android.os.StrictMode$StrictModeViolation
                  android.os.StrictMode.executeDeathPenalty
                 ****************************************************************************** */
+                messageET.getText().clear();
             }
         });
     }
@@ -77,7 +81,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                sendMessageBtn.setVisibility(View.VISIBLE);
+                sendMessageIcon.setVisibility(View.VISIBLE);
                 Toast.makeText(ClientActivity.this, "connecting to the server", Toast.LENGTH_SHORT).show();
             }
         });

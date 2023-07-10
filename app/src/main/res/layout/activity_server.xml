@@ -5,34 +5,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_vertical"
     tools:context=".ServerActivity">
-
-    <TextView
-        android:id="@+id/server_message_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
 
     <TextView
         android:id="@+id/server_ip_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        android:layout_weight="0"
         />
 
-    <EditText
-        android:id="@+id/server_message_et"
+    <TextView
+        android:id="@+id/server_message_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="type message here..."
+        android:layout_gravity="left"
         />
 
-    <Button
-        android:id="@+id/send_message_btn"
+    <LinearLayout
+        android:id="@+id/message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Send Message"
-        />
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        >
+
+        <EditText
+            android:id="@+id/server_message_et"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="type message here..."
+            android:layout_weight="2"
+            />
+
+        <ImageView
+            android:id="@+id/send_message_icon"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_send_24"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
 
 </LinearLayout>

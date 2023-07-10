@@ -5,22 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_vertical"
     tools:context=".ClientActivity">
-
-    <TextView
-        android:id="@+id/client_message_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <EditText
-        android:id="@+id/client_message_et"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="type message here..."
-        android:layout_gravity="center_horizontal"
-        />
 
     <EditText
         android:id="@+id/client_ip_et"
@@ -38,11 +23,38 @@
         android:layout_gravity="center_horizontal"
         />
 
-    <Button
-        android:id="@+id/send_message_btn"
+    <TextView
+        android:id="@+id/client_message_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="send message"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="left"
         />
+
+    <LinearLayout
+        android:id="@+id/message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        >
+
+        <EditText
+            android:id="@+id/client_message_et"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="type message here..."
+            />
+
+        <ImageView
+            android:id="@+id/send_message_icon"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_send_24"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
 </LinearLayout>
