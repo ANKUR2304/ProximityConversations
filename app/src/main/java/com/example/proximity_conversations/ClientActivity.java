@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class ClientActivity extends AppCompatActivity {
+public class ClientActivity extends AppCompatActivity implements Client.ClientCallback {
+    TextView messageTV;
     String serverIP;
-    EditText editText;
+    EditText messageET;
     EditText serverIPEditText;
     Button setServerIPBtn;
     Button sendMessageBtn;
@@ -21,8 +23,9 @@ public class ClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
 
-        editText = findViewById(R.id.client_message_et);
-        editText.setVisibility(View.INVISIBLE);
+        messageTV = findViewById(R.id.client_message_tv);
+        messageET = findViewById(R.id.client_message_et);
+        messageET.setVisibility(View.INVISIBLE);
 
         serverIPEditText = findViewById(R.id.client_ip_et);
 
@@ -37,7 +40,7 @@ public class ClientActivity extends AppCompatActivity {
                 serverIP = serverIPEditText.getText().toString();
 
                 serverIPEditText.setVisibility(View.INVISIBLE);
-                editText.setVisibility(View.VISIBLE);
+                messageET.setVisibility(View.VISIBLE);
                 setServerIPBtn.setVisibility(View.INVISIBLE);
 
                 setupClient();
@@ -47,7 +50,15 @@ public class ClientActivity extends AppCompatActivity {
         sendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.sendMessage(editText.getText().toString());
+                client.sendMessage(messageET.getText().toString());
+                // onClickListener executes on Main Thread
+                // And, we can not access network on Main thread
+
+                /* *******************************************************************************
+                If we call the network on main thread, we will get exception stating:
+                 android.os.StrictMode$StrictModeViolation
+                 android.os.StrictMode.executeDeathPenalty
+                ****************************************************************************** */
             }
         });
     }
@@ -57,6 +68,7 @@ public class ClientActivity extends AppCompatActivity {
             @Override
             public void run() {
                 client = new Client(serverIP, 5000);
+                client.setClientCallback(ClientActivity.this);
                 client.startMessaging();
             }
         });
@@ -67,6 +79,16 @@ public class ClientActivity extends AppCompatActivity {
             public void run() {
                 sendMessageBtn.setVisibility(View.VISIBLE);
                 Toast.makeText(ClientActivity.this, "connecting to the server", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onMessageReceived(String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                messageTV.setText(message);
             }
         });
     }

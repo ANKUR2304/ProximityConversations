@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,8 @@ import java.util.Enumeration;
 
 public class ServerActivity extends AppCompatActivity implements Server.ServerCallback {
     TextView messageTV;
+    EditText messageET;
+    Button sendMessageBtn;
     TextView ipTV;
     Server server;
 
@@ -24,7 +29,19 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
         setContentView(R.layout.activity_server);
 
         messageTV = findViewById(R.id.server_message_tv);
+        messageET = findViewById(R.id.server_message_et);
         ipTV = findViewById(R.id.server_ip_tv);
+        sendMessageBtn = findViewById(R.id.send_message_btn);
+
+        messageET.setVisibility(View.INVISIBLE);
+        sendMessageBtn.setVisibility(View.INVISIBLE);
+
+        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                server.sendMessage(messageET.getText().toString());
+            }
+        });
 
         // get IP of the server device and show via text view
         Toast.makeText(ServerActivity.this, "fetching IP address of the device", Toast.LENGTH_SHORT).show();
@@ -68,5 +85,16 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
                 messageTV.setText(message);
             }
         });
+    }
+
+    public void onClientAccepted(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                messageET.setVisibility(View.VISIBLE);
+                sendMessageBtn.setVisibility(View.VISIBLE);
+            }
+        });
+        Log.e("onClientAccepted: ", "done");
     }
 }

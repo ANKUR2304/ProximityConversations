@@ -21,4 +21,18 @@
         android:textAlignment="center"
         />
 
+    <EditText
+        android:id="@+id/server_message_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="type message here..."
+        />
+
+    <Button
+        android:id="@+id/send_message_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Message"
+        />
+
 </LinearLayout>
