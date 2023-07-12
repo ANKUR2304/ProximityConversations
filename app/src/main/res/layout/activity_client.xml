@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/messaging_area_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,24 +40,17 @@
         android:clipChildren="false"
         >
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_for_messages"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            >
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_for_messages"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                />
-
-        </LinearLayout>
+            android:layout_weight="12"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="horizontal"
             android:layout_weight="1"
             android:gravity="bottom"
@@ -81,6 +74,6 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

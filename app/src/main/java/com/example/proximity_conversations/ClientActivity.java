@@ -37,8 +37,6 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
         setContentView(R.layout.activity_client);
 
         recyclerView = findViewById(R.id.recyclerView_for_messages);
-        messages.add(new MessageModel("Hi"));
-
         recyclerView.setVisibility(GONE);
 
         messageET = findViewById(R.id.client_message_et);
@@ -116,6 +114,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
                 // add message to messages list that our recycler view is using
                 messages.add(new MessageModel(message));
                 adapter.notifyItemInserted(messages.size()-1);
+                recyclerView.scrollToPosition(messages.size()-1);
             }
         });
     }
