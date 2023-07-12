@@ -1,6 +1,10 @@
 package com.example.proximity_conversations;
 
+import static android.view.View.GONE;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,14 +20,18 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class ServerActivity extends AppCompatActivity implements Server.ServerCallback {
-    TextView messageTV;
     EditText messageET;
     ImageView sendMessageIcon;
     TextView ipTV;
     Server server;
+
+    RecyclerView recyclerView;
+    Message_RecyclerViewAdapter adapter;
+    ArrayList<MessageModel> messages = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -31,7 +39,9 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
 
-        messageTV = findViewById(R.id.server_message_tv);
+        recyclerView = findViewById(R.id.recyclerView_for_messages);
+        recyclerView.setVisibility(GONE);
+
         messageET = findViewById(R.id.server_message_et);
         ipTV = findViewById(R.id.server_ip_tv);
         sendMessageIcon = findViewById(R.id.send_message_icon);
@@ -71,6 +81,11 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
                     Log.e("onCreate: ", ip);
                 }
             }
+            // set adapter for recycler view
+            adapter = new Message_RecyclerViewAdapter(this, messages);
+            recyclerView.setAdapter(adapter);
+            // set layout-manager for recycler view
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             // start server
             server = new Server(5000);
@@ -86,7 +101,10 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                messageTV.setText(message);
+                // add message to messages list that our recycler view is using
+                messages.add(new MessageModel(message));
+                adapter.notifyItemInserted(messages.size()-1);
+                recyclerView.scrollToPosition(messages.size()-1);
             }
         });
     }
@@ -98,6 +116,7 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
                 ipTV.setVisibility(View.GONE);
                 messageET.setVisibility(View.VISIBLE);
                 sendMessageIcon.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         });
         Log.e("onClientAccepted: ", "done");
