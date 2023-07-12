@@ -8,7 +8,7 @@ import java.io.File;
 public class MessageModel {
     private int messageType = 0; // by default it is 0 i.e. textMessage
     //messageCategory --> 0 for sent, 1 for received
-    private int messageCategory = 0; // sent message by default
+    private int messageCategory = 1; // received message by default
     private String textMessage;
     private Image imageMessage;
     private MediaStore.Audio audioMessage;
@@ -18,7 +18,7 @@ public class MessageModel {
     public MessageModel(String textMessage){
         this.textMessage = textMessage;
         messageType = 0;
-        messageCategory = 0;
+        messageCategory = 1;
     }
 
     public MessageModel(Image imageMessage){
@@ -51,6 +51,7 @@ public class MessageModel {
     public int getMessageCategory(){
         return this.messageCategory;
     }
+    public void setMessageCategory(int category){this.messageCategory = category;}
 
     public Object getMessage(){
         if(messageType == 0)return textMessage;

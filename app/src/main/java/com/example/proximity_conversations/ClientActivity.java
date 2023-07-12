@@ -65,7 +65,8 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
         sendMessageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.sendMessage(messageET.getText().toString());
+                String message = messageET.getText().toString();
+                client.sendMessage(message);
                 // onClickListener executes on Main Thread
                 // And, we can not access network on Main thread
 
@@ -75,6 +76,14 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientCa
                  android.os.StrictMode.executeDeathPenalty
                 ****************************************************************************** */
                 messageET.getText().clear();
+
+                // show sent message on our side also
+                MessageModel messageModel = new MessageModel(message);
+                messageModel.setMessageCategory(0);
+
+                messages.add(messageModel);
+                adapter.notifyItemInserted(messages.size()-1);
+                recyclerView.scrollToPosition(messages.size()-1);
             }
         });
 

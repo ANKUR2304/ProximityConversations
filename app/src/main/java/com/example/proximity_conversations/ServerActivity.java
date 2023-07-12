@@ -52,8 +52,17 @@ public class ServerActivity extends AppCompatActivity implements Server.ServerCa
         sendMessageIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                server.sendMessage(messageET.getText().toString());
+                String message = messageET.getText().toString();
+                server.sendMessage(message);
                 messageET.getText().clear();
+
+                // show sent message on our side also
+                MessageModel messageModel = new MessageModel(message);
+                messageModel.setMessageCategory(0);
+
+                messages.add(messageModel);
+                adapter.notifyItemInserted(messages.size()-1);
+                recyclerView.scrollToPosition(messages.size()-1);
             }
         });
 
