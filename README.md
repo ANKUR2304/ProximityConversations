@@ -5,7 +5,12 @@ This application allows users (who are in same subnet - same Access Point, WiFi-
 - Two way File Transfer
 - Audio Call
 - Video Call
+  
 - Record and Send Audio Notes
 - Record and Send Videos
 - Capture and Send Image
+  
 - Open YouTube video in PIP mode in chat itself
+- Change chat background
+- Share Live location
+- GIF support in chat
