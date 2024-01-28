@@ -4,6 +4,8 @@ This application allows users (who are in same subnet - same Access Point, WiFi-
 - Two way Messaging
 - Two way File Transfer
 - Audio Call
+
+Features to be added:
 - Video Call
   
 - Record and Send Audio Notes
