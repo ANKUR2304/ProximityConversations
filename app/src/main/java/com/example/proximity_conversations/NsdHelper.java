@@ -25,13 +25,24 @@ public class NsdHelper {
     NsdManager.RegistrationListener registrationListener;
     NsdManager.DiscoveryListener discoveryListener;
     NsdManager.ResolveListener resolveListener;
-    String serviceName;
+    private static String serviceName;
     NsdServiceInfo mService;
 
-    public NsdHelper(Context context, Handler handler){
+    DiscoveredDeviceCallback discoveredDeviceCallback;
+
+    private static NsdHelper nsdHelper;
+
+    private NsdHelper(Context context, Handler handler){
         this.context = context;
         this.handler = handler;
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
+    }
+
+    public static NsdHelper getNsdHelper(Context context, Handler handler){
+        if(nsdHelper == null){
+            nsdHelper = new NsdHelper(context, handler);
+        }
+        return nsdHelper;
     }
 
     public void setServiceName(String username){
@@ -133,20 +144,24 @@ public class NsdHelper {
             public void onServiceFound(NsdServiceInfo service) {
                 // A service was found! Do something with it.
                 String foundServiceType = service.getServiceType();
+                Log.e(TAG, "found service type = " + foundServiceType);
+                Log.e(TAG, "found service name = " + service.getServiceName());
+
                 if (foundServiceType != null && foundServiceType.length() > 0 && foundServiceType.charAt(foundServiceType.length() - 1) == '.') {
                     foundServiceType = foundServiceType.substring(0, foundServiceType.length() - 1);
                 }
-                Log.d(TAG, "Service discovery success " + service);
+                Log.d(TAG, "Service discovery success " + service.toString());
                 if (!foundServiceType.equals(SERVICE_TYPE)) {
                     // Service type is the string containing the protocol and
                     // transport layer for this service.
                     Log.d(TAG, "Unknown Service Type: " + foundServiceType + " while my service type is : " + SERVICE_TYPE);
-                } else if (service.getServiceName().equals(serviceName)) {
+                } else if (service.getServiceName().equals(SERVICE_NAME)) {
                     // The name of the service tells the user what they'd be
                     // connecting to. It could be "Bob's Chat App".
-                    Log.d(TAG, "Same machine: " + serviceName);
+                    Log.d(TAG, "Same machine: " + service);
                 } else {
                     initializeResolveListener();
+                    Log.e(TAG, "resolving service : " + service);
                     nsdManager.resolveService(service, resolveListener);
                 }
             }
@@ -180,6 +195,9 @@ public class NsdHelper {
 
     // Resolve
     public void initializeResolveListener() {
+        if(resolveListener  != null){
+            return;
+        }
         resolveListener = new NsdManager.ResolveListener() {
 
             @Override
@@ -191,14 +209,18 @@ public class NsdHelper {
             @Override
             public void onServiceResolved(NsdServiceInfo serviceInfo) {
                 Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
-                // Add this device to discovered list, now
-                if (serviceInfo.getServiceName().equals(serviceName)) {
-                    Log.d(TAG, "Same IP.");
+
+                if (serviceInfo.getServiceName().equals(SERVICE_NAME)) {
+                    Log.d(TAG, "Same IP " + SERVICE_NAME + ", therefore, not adding to discovered devices list");
                     return;
                 }
-                mService = serviceInfo;
-                localPort = mService.getPort();
-                InetAddress host = mService.getHost();
+
+                //mService = serviceInfo;
+                //localPort = mService.getPort();
+                //InetAddress host = mService.getHost();
+
+                // Add this device to discovered list, now
+                discoveredDeviceCallback.addDiscoveredDevice(serviceInfo.getServiceName(), serviceInfo.getHost().toString(), serviceInfo.getPort());
             }
         };
     }
@@ -214,5 +236,13 @@ public class NsdHelper {
             discoveryListener = null;
         }
         resolveListener = null;
+    }
+
+    public interface DiscoveredDeviceCallback{
+        public void addDiscoveredDevice(String username, String IP, int port);
+    }
+
+    public void setDiscoveredDeviceCallback(DiscoveredDeviceCallback discoveredDeviceCallback){
+        this.discoveredDeviceCallback = discoveredDeviceCallback;
     }
 }

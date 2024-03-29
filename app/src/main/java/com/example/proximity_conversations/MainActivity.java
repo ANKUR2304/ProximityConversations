@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         context = this;
         handler = new Handler();
-        nsdHelper = new NsdHelper(context, handler);
+        nsdHelper = NsdHelper.getNsdHelper(context, handler);
 
         EditText usernameEditText = (EditText)findViewById(R.id.username_text_input);
         Button nextButton = findViewById(R.id.main_activity_next_button_id);
@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 username = usernameEditText.getText().toString();
                 setupNsdService();
+
+                Intent homeScreenActivityIntent = new Intent(context, HomeScreenActivity.class);
+                startActivity(homeScreenActivityIntent);
             }
         });
     }
