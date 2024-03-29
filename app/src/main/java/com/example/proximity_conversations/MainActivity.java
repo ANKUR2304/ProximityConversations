@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
 import com.example.proximity_conversations.NsdHelper;
 
 import java.net.ServerSocket;
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private Context context;
 
-    private ArrayList<Uri> selectedUris = new ArrayList<>();
+    private static String username = "Proximity User";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +33,37 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
         nsdHelper = new NsdHelper(context, handler);
 
-        setupNsdService();
+        EditText usernameEditText = (EditText)findViewById(R.id.username_text_input);
+        Button nextButton = findViewById(R.id.main_activity_next_button_id);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                username = usernameEditText.getText().toString();
+                setupNsdService();
+            }
+        });
     }
 
     public void setupNsdService(){
         Thread nsdServiceThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                // set username
+                nsdHelper.setServiceName(username);
+
                 // Register NsdService
                 nsdHelper.registerService();
+
                 // Start nsdDiscovery
                 nsdHelper.startNsdDiscovery();
             }
         });
         nsdServiceThread.start();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        nsdHelper.tearDown();
     }
 }

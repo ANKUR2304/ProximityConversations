@@ -13,7 +13,7 @@ import android.os.Handler;
 public class NsdHelper {
     private static final String TAG = "NsdHelper";
     private static final String SERVICE_TYPE = "_ProximityConversations._tcp";
-    private static String SERVICE_NAME = "ProximityConversations";
+    private static String SERVICE_NAME = "Proximity Service";
 
     private Context context;
     private NsdManager nsdManager;
@@ -34,6 +34,10 @@ public class NsdHelper {
         nsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
     }
 
+    public void setServiceName(String username){
+        SERVICE_NAME = username;
+    }
+
     public void initializeServerSocket(){
         // initializes a server socket on the next available port
         try{
@@ -47,6 +51,10 @@ public class NsdHelper {
     }
 
     public void registerService() {
+        if(registrationListener != null){
+            return;
+        }
+
         initializeServerSocket();
 
         // Create the NsdServiceInfo object, and populate it.
@@ -100,6 +108,10 @@ public class NsdHelper {
 
     // Discovery
     public void startNsdDiscovery(){
+        if(discoveryListener != null){
+            return;
+        }
+
         initializeDiscoveryListener();
         nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
     }
