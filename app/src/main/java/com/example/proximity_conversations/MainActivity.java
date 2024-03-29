@@ -2,36 +2,48 @@ package com.example.proximity_conversations;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import com.example.proximity_conversations.NsdHelper;
+
+import java.net.ServerSocket;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    Button serverButton;
-    Button clientButton;
+    public static final String TAG = MainActivity.class.getSimpleName();
+    private NsdHelper nsdHelper;
+    private Handler handler;
+    private Context context;
+
+    private ArrayList<Uri> selectedUris = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        serverButton = findViewById(R.id.make_server_btn);
-        clientButton = findViewById(R.id.make_client_btn);
+        context = this;
+        handler = new Handler();
+        nsdHelper = new NsdHelper(context, handler);
 
-        serverButton.setOnClickListener(new View.OnClickListener() {
+        setupNsdService();
+    }
+
+    public void setupNsdService(){
+        Thread nsdServiceThread = new Thread(new Runnable() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ServerActivity.class);
-                startActivity(intent);
+            public void run() {
+                // Register NsdService
+                nsdHelper.registerService();
+                // Start nsdDiscovery
+                nsdHelper.startNsdDiscovery();
             }
         });
-
-        clientButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ClientActivity.class);
-                startActivity(intent);
-            }
-        });
+        nsdServiceThread.start();
     }
 }
