@@ -34,7 +34,7 @@
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/ANKUR2304/proximity_conversations.git
+    git clone https://github.com/your_username/proximity_conversations.git
     cd proximity_conversations
     ```
 
